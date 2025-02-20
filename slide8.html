@@ -3,34 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Campanha de Phishing</title>
+  <title>Campanha de Phishing</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <div class="slide">
-     <section id="como-se-proteger">
-  <h2>Como se Proteger?</h2>
-       
-       <video id="video" width="600" controls>
-        <source src="0.mp4" type="video/mp4">
-        Seu navegador não suporta vídeos.
-      </video>
-  
-  <h3>Boas práticas:</h3>
-  <ul>
-    <li>Use autenticação de dois fatores.</li>
-    <li>Não clique em links desconhecidos.</li>
-    <li>Mantenha antivírus atualizado.</li>
-    <li>Desconfie de mensagens alarmantes.</li>
-  </ul>
-
-  </section>
-
-      
+      <section id="como-se-proteger">
+        <h2>Como se Proteger?</h2>
+        <video id="video" width="600" controls>
+          <source src="5.mp4" type="video/mp4">
+          Seu navegador não suporta vídeos.
+        </video>
+        <h3>Boas práticas:</h3>
+        <ul>
+          <li>Use autenticação de dois fatores.</li>
+          <li>Não clique em links desconhecidos.</li>
+          <li>Mantenha antivírus atualizado.</li>
+          <li>Desconfie de mensagens alarmantes.</li>
+        </ul>
+      </section>
+    </div>
+    <!-- Link estilizado como botão -->
+    <a href="slide9.html" class="button" id="nextButton" style="pointer-events: none;">Próximo</a>
   </div>
-    <button id="nextButton" disabled>Próximo</button>
-  </div>
-  <script src="script.js"></script>
-  </body>
+  <script>
+    // Habilitar botão após 15 segundos
+    setTimeout(() => {
+      const nextButton = document.getElementById("nextButton");
+      nextButton.style.pointerEvents = "auto"; // Permitir clique
+      nextButton.style.cursor = "pointer"; // Atualizar cursor
+      nextButton.classList.add("enabled"); // Adicionar classe para habilitar
+    }, 15000);
+  </script>
+</body>
 </html>
