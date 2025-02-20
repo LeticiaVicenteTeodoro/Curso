@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     nextButton.disabled = false; // Remove o atributo "disabled"
     nextButton.style.cursor = "pointer"; // Atualiza o estilo do cursor
-  }, 15000);
+  }, 5000);
 
   // Adicionar funcionalidade ao botão para ir para a próxima página
   slide2.addEventListener("click", function () {
