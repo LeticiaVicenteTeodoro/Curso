@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phishing Campaign - Slide 3</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 800px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .option {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #e0e0e0;
+      border: 2px solid transparent;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .option:hover {
+      background: #d6d6d6;
+    }
+
+    .option.correct {
+      background: #28a745;
+      color: white;
+    }
+
+    .option.incorrect {
+      background: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Slide 3: Selecione a Opção Correta</h1>
+    <div class="question">
+      <p>O que é phishing?</p>
+    </div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false)">A) Um tipo de peixe</div>
+      <div class="option" onclick="checkAnswer(this, true)">B) Um ataque que tenta enganar pessoas para roubar informações</div>
+      <div class="option" onclick="checkAnswer(this, false)">C) Uma técnica de pesca esportiva</div>
+      <div class="option" onclick="checkAnswer(this, false)">D) Um vírus de computador</div>
+    </div>
+  </div>
+
+  <script>
+    function checkAnswer(option, isCorrect) {
+      if (isCorrect) {
+        option.classList.add('correct');
+        setTimeout(() => {
+          window.location.href = 'slide4.html';
+        }, 1000);
+      } else {
+        option.classList.add('incorrect');
+        setTimeout(() => {
+          option.classList.remove('incorrect');
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phishing Campaign - Slide 6</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 800px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .option {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #e0e0e0;
+      border: 2px solid transparent;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .option:hover {
+      background: #d6d6d6;
+    }
+
+    .option.correct {
+      background: #28a745;
+      color: white;
+    }
+
+    .option.incorrect {
+      background: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Slide 3: O seguinte email é um phishing?</h1>
+    <div class="question">
+      <section style="max-width: 600px; margin: 20px auto; padding: 20px; border: 2px solid black; border-radius: 10px; background-color: #f9f9f9; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+  <h2 style="text-align: center; color: #333;">Assunto: Atualização Urgente da Sua Conta Bancária</h2>
+  <p><strong>Caro cliente,</strong></p>
+  <p>Detectamos uma atividade incomum em sua conta e, por motivos de segurança, precisamos que você atualize suas informações imediatamente. Caso contrário, sua conta será bloqueada.</p>
+  <p>Por favor, clique no link abaixo para atualizar seus dados:</p>
+  <p style="text-align: center;">
+    <a href="#" style="color: blue; text-decoration: underline; font-weight: bold;">Atualizar minha conta agora</a>
+  </p>
+  <p>Atenciosamente,</p>
+  <p><strong>Equipe de Suporte ao Cliente</strong><br>Seu Banco</p>
+</section>
+
+
+    </div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false)">A) Não</div>
+      <div class="option" onclick="checkAnswer(this, true)">B) Sim</div>
+      
+      
+        </div>
+  </div>
+
+  <script>
+    function checkAnswer(option, isCorrect) {
+      if (isCorrect) {
+        option.classList.add('correct');
+        setTimeout(() => {
+          window.location.href = 'slide7.html';
+        }, 1000);
+      } else {
+        option.classList.add('incorrect');
+        setTimeout(() => {
+          option.classList.remove('incorrect');
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+</html>

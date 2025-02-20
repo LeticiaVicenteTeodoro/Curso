@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz sobre Phishing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      color: #333;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .question {
+      margin: 20px 0;
+      font-size: 1.2rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      padding: 10px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .option:hover {
+      background: #d6d6d6;
+    }
+
+    .option.correct {
+      background: #28a745;
+      color: white;
+    }
+
+    .option.incorrect {
+      background: #dc3545;
+      color: white;
+    }
+
+    .navigation {
+      margin-top: 20px;
+    }
+
+    .next {
+      display: none;
+      padding: 10px 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .next:hover {
+      background: #1e4bb8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz sobre Phishing</h1>
+    <div class="question" id="question">O que é phishing?</div>
+    <div class="options" id="options">
+      <div class="option" onclick="checkAnswer(this, false)">A) Um tipo de ataque de força bruta</div>
+      <div class="option" onclick="checkAnswer(this, true)">B) Um ataque que engana pessoas para roubar informações</div>
+      <div class="option" onclick="checkAnswer(this, false)">C) Um software malicioso usado para espionar dispositivos</div>
+      <div class="option" onclick="checkAnswer(this, false)">D) Um tipo de vírus de computador</div>
+    </div>
+    <div class="navigation">
+      <button class="next" id="next" onclick="nextQuestion()">Próxima</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "O que é phishing?",
+        options: [
+          { text: "Um tipo de ataque de força bruta", correct: false },
+          { text: "Um ataque que engana pessoas para roubar informações", correct: true },
+          { text: "Um software malicioso usado para espionar dispositivos", correct: false },
+          { text: "Um tipo de vírus de computador", correct: false },
+        ],
+      },
+      {
+        question: "Quais são os impactos do phishing?",
+        options: [
+          { text: "Roubo de informações pessoais", correct: true },
+          { text: "Melhoria na segurança online", correct: false },
+          { text: "Desempenho mais rápido no computador", correct: false },
+          { text: "Proteção contra ataques cibernéticos", correct: false },
+        ],
+      },
+      {
+        question: "Como se proteger do phishing?",
+        options: [
+          { text: "Clicar em todos os links recebidos", correct: false },
+          { text: "Evitar abrir e-mails suspeitos", correct: true },
+          { text: "Compartilhar senhas por e-mail", correct: false },
+          { text: "Ignorar atualizações de software", correct: false },
+        ],
+      },
+      {
+        question: "Qual é um exemplo de phishing?",
+        options: [
+          { text: "Receber um e-mail falso de um banco", correct: true },
+          { text: "Baixar um aplicativo oficial da loja", correct: false },
+          { text: "Comprar produtos em sites confiáveis", correct: false },
+          { text: "Configurar autenticação em duas etapas", correct: false },
+        ],
+      },
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function loadQuestion() {
+      const questionElement = document.getElementById('question');
+      const optionsElement = document.getElementById('options');
+      const nextButton = document.getElementById('next');
+
+      const currentQuestion = questions[currentQuestionIndex];
+
+      questionElement.textContent = currentQuestion.question;
+      optionsElement.innerHTML = '';
+
+      currentQuestion.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.classList.add('option');
+        optionElement.textContent = option.text;
+        optionElement.onclick = () => checkAnswer(optionElement, option.correct);
+        optionsElement.appendChild(optionElement);
+      });
+
+      nextButton.style.display = 'none';
+    }
+
+    function checkAnswer(optionElement, isCorrect) {
+      const options = document.querySelectorAll('.option');
+      options.forEach((option) => (option.onclick = null));
+
+      if (isCorrect) {
+        optionElement.classList.add('correct');
+        document.getElementById('next').style.display = 'block';
+      } else {
+        optionElement.classList.add('incorrect');
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        window.location.href = 'Paginadeconclusaodocurso.html';
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

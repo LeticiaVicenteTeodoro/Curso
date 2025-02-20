@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instruções para o Quiz</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      color: #333;
+    }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #2563eb;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .start-btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .start-btn:hover {
+      background: #1e4bb8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Preparado para o Quiz?</h1>
+    <p>Agora que você concluiu as lições, chegou a hora de testar seus conhecimentos sobre phishing! O quiz é simples e vai ajudar a reforçar o que você aprendeu.</p>
+    <button class="start-btn" onclick="startQuiz()">Ir para o Quiz</button>
+  </div>
+
+  <script>
+    function startQuiz() {
+      window.location.href = 'quis finalizar.html';
+    }
+  </script>
+</body>
+</html>
