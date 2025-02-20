@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 15000);
 
   // Adicionar funcionalidade ao botão para ir para a próxima página
-  nextButton.addEventListener("click", function () {
+  slide2.addEventListener("click", function () {
     window.location.href = "slide2.html";
   });
 
