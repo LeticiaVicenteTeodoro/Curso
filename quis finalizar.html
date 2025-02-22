@@ -93,12 +93,7 @@
   <div class="container">
     <h1>Quiz sobre Phishing</h1>
     <div class="question" id="question">O que é phishing?</div>
-    <div class="options" id="options">
-      <div class="option" onclick="checkAnswer(this, false)">A) Um tipo de ataque de força bruta</div>
-      <div class="option" onclick="checkAnswer(this, true)">B) Um ataque que engana pessoas para roubar informações</div>
-      <div class="option" onclick="checkAnswer(this, false)">C) Um software malicioso usado para espionar dispositivos</div>
-      <div class="option" onclick="checkAnswer(this, false)">D) Um tipo de vírus de computador</div>
-    </div>
+    <div class="options" id="options"></div>
     <div class="navigation">
       <button class="next" id="next" onclick="nextQuestion()">Próxima</button>
     </div>
@@ -156,7 +151,7 @@
       questionElement.textContent = currentQuestion.question;
       optionsElement.innerHTML = '';
 
-      currentQuestion.options.forEach((option, index) => {
+      currentQuestion.options.forEach((option) => {
         const optionElement = document.createElement('div');
         optionElement.classList.add('option');
         optionElement.textContent = option.text;
@@ -168,14 +163,20 @@
     }
 
     function checkAnswer(optionElement, isCorrect) {
-      const options = document.querySelectorAll('.option');
-      options.forEach((option) => (option.onclick = null));
-
       if (isCorrect) {
         optionElement.classList.add('correct');
         document.getElementById('next').style.display = 'block';
+
+        // Desabilitar todas as opções após acerto
+        const options = document.querySelectorAll('.option');
+        options.forEach((option) => (option.onclick = null));
       } else {
         optionElement.classList.add('incorrect');
+
+        // Permitir tentar novamente removendo a classe de erro após 1 segundo
+        setTimeout(() => {
+          optionElement.classList.remove('incorrect');
+        }, 1000);
       }
     }
 
