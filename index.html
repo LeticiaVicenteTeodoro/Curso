@@ -16,5 +16,16 @@
         </div>
     </div>
 
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userKey = urlParams.get('key');
+
+        if (userKey) {
+            console.log("Usuário identificável pela chave:", userKey);
+
+
+        }
+    </script>
+
 </body>
 </html>
