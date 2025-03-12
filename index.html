@@ -82,20 +82,26 @@
         }
 
 
-function registrarClique() {
-    fetch("https://script.google.com/macros/s/AKfycbzTMc4XrRCNhbSGraWidSLgVgHtWWBrY2o4olwvv9cAdPH8F1MdjDHXPFxh_JLRhr25/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clique: "Usuário clicou" })
-    })
-    .then(response => response.text())
-    .then(data => {
+async function registrarClique() {
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzTMc4XrRCNhbSGraWidSLgVgHtWWBrY2o4olwvv9cAdPH8F1MdjDHXPFxh_JLRhr25/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ clique: "Usuário clicou" })
+        });
+
+        const data = await response.text();
         alert("Registrado com sucesso!");
-        // ✅ Somente agora redireciona para o curso
+
+        // ✅ Agora redireciona após a requisição ser concluída
         window.location.href = 'slide1.html';
-    })
-    .catch(error => console.error("Erro:", error));
+
+    } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro ao registrar clique.");
+    }
 }
+
 
     
     
