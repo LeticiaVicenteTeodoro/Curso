@@ -12,9 +12,7 @@
         <div class="message-box">
             <h1>Você caiu em um ataque de phishing!</h1>
             <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
-            
-            
-           <button onclick="registrarClique()">Começar o Curso</button>
+            <button onclick="window.location.href='slide1.html'">Começar o Curso</button>
         </div>
     </div>
 
@@ -80,32 +78,6 @@
         if (userKey === "admin") {
             document.getElementById('exportButton').style.display = 'block';
         }
-
-
-async function registrarClique() {
-    try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzTMc4XrRCNhbSGraWidSLgVgHtWWBrY2o4olwvv9cAdPH8F1MdjDHXPFxh_JLRhr25/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ clique: "Usuário clicou" })
-        });
-
-        const data = await response.text();
-        alert("Registrado com sucesso!");
-
-        // ✅ Agora redireciona após a requisição ser concluída
-        window.location.href = 'slide1.html';
-
-    } catch (error) {
-        console.error("Erro:", error);
-        alert("Erro ao registrar clique.");
-    }
-}
-
-
-    
-    
- }
     </script>
 
 </body>
