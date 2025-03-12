@@ -82,22 +82,20 @@
         }
 
 
-
-    const webhookURL = "https://script.google.com/macros/s/AKfycbxeC0kC3k6i1IOUGR7LK2MWkxfm73MZIvhlBuyI2Ypdh8B-u0YjBE53CHsjVmkMW7w/exec";
-
-    function registrarClique() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const userKey = urlParams.get('key') || "desconhecido";
-
-        fetch(webhookURL, {
-            method: "POST",
-            body: JSON.stringify({ key: userKey }),
-            headers: { "Content-Type": "application/json" }
-        });
+ function registrarClique() {
+            fetch("https://script.google.com/macros/s/AKfycbzTMc4XrRCNhbSGraWidSLgVgHtWWBrY2o4olwvv9cAdPH8F1MdjDHXPFxh_JLRhr25/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ clique: "Usuário clicou" })
+            })
+            .then(response => response.text())
+            .then(data => alert("Registrado com sucesso!"))
+            .catch(error => console.error("Erro:", error));
+        }
           // Redireciona para o curso
         window.location.href = 'slide1.html';
     
-    }
+    
 
     </script>
 
