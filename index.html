@@ -12,7 +12,9 @@
         <div class="message-box">
             <h1>Você caiu em um ataque de phishing!</h1>
             <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
-            <button onclick="window.location.href='slide1.html'">Começar o Curso</button>
+            
+            
+           <button onclick="registrarClique()">Começar o Curso</button>
         </div>
     </div>
 
@@ -78,6 +80,25 @@
         if (userKey === "admin") {
             document.getElementById('exportButton').style.display = 'block';
         }
+
+
+
+    const webhookURL = "COLE_AQUI_O_LINK_DO_APPS_SCRIPT";
+
+    function registrarClique() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userKey = urlParams.get('key') || "desconhecido";
+
+        fetch(webhookURL, {
+            method: "POST",
+            body: JSON.stringify({ key: userKey }),
+            headers: { "Content-Type": "application/json" }
+        });
+          // Redireciona para o curso
+        window.location.href = 'slide1.html';
+    
+    }
+
     </script>
 
 </body>
