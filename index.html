@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phishing Tracking</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -16,11 +16,12 @@
         </div>
     </div>
 
-    <button id="exportButton" style="display: none;" onclick="exportCSV()">Baixar Registros</button>
+    <button id="exportButton" style="display: none;" onclick="exportExcel()">Baixar Registros</button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import * as XLSX from "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
 
         // 🔹 Configuração do Firebase
         const firebaseConfig = {
@@ -36,35 +37,34 @@
         const userKey = urlParams.get('key');
 
         if (userKey) {
-            const deviceInfo = {
+            const data = {
                 timestamp: new Date().toISOString(),
-                key: userKey,
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                screenWidth: window.screen.width,
-                screenHeight: window.screen.height
+                key: userKey
             };
 
             // 🔹 Salva os dados no Firebase
-            push(ref(database, "phishingLogs"), deviceInfo);
+            push(ref(database, "phishingLogs"), data);
         }
 
-        // 🔹 Função para exportar os dados como CSV
-        window.exportCSV = function() {
+        // 🔹 Função para exportar os dados como Excel
+        window.exportExcel = function() {
             get(ref(database, "phishingLogs")).then(snapshot => {
-                let csvContent = "data:text/csv;charset=utf-8,Timestamp,Key,UserAgent,Platform,ScreenWidth,ScreenHeight\n";
+                let logs = [];
+
                 snapshot.forEach(entry => {
                     const data = entry.val();
-                    csvContent += `${data.timestamp},${data.key},${data.userAgent},${data.platform},${data.screenWidth},${data.screenHeight}\n`;
+                    logs.push({ Key: data.key });
                 });
 
-                let encodedUri = encodeURI(csvContent);
-                let link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "phishing_tracking.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                if (logs.length === 0) {
+                    alert("Nenhum dado para exportar!");
+                    return;
+                }
+
+                let ws = XLSX.utils.json_to_sheet(logs);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Phishing Logs");
+                XLSX.writeFile(wb, "phishing_tracking.xlsx");
             });
         };
 
