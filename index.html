@@ -1,78 +1,81 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phishing Tracking</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+<html lang="pt-br">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Phishing Tracking</title>  
+    <link rel="stylesheet" href="style.css">  
+</head>  
+<body>  <div class="container">  
+    <div class="message-box">  
+        <h1>Você caiu em um ataque de phishing!</h1>  
+        <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>  
+        <button onclick="window.location.href='slide1.html'">Começar o Curso</button>  
+    </div>  
+</div>  
 
-    <div class="container">
-        <div class="message-box">
-            <h1>Você caiu em um ataque de phishing!</h1>
-            <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
-            <button onclick="window.location.href='slide1.html'">Começar o Curso</button>
-        </div>
-    </div>
+<button id="exportButton" style="display: none;" onclick="exportCSV()">Baixar Registros</button>  
 
-    <button id="exportButton" style="display: none;" onclick="exportExcel()">Baixar Registros</button>
+<script>  
+    // Captura a key da URL  
+    const urlParams = new URLSearchParams(window.location.search);  
+    const userKey = urlParams.get('key');  
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-        import * as XLSX from "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    if (userKey) {  
+        console.log("Usuário identificável pela chave:", userKey);  
 
-        // 🔹 Configuração do Firebase
-        const firebaseConfig = {
-            databaseURL: "https://campanha-de-phishing-default-rtdb.firebaseio.com/"
-        };
+        // Recupera as chaves salvas no localStorage  
+        let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];  
 
-        // 🔹 Inicializa Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        // Adiciona a nova key com um timestamp  
+        storedKeys.push({  
+            timestamp: new Date().toISOString(),  
+            key: userKey  
+        });  
 
-        // 🔹 Captura a key da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userKey = urlParams.get('key');
+        // Salva no localStorage  
+        localStorage.setItem('phishingKeys', JSON.stringify(storedKeys));  
+    }  
 
-        if (userKey) {
-            const data = {
-                timestamp: new Date().toISOString(),
-                key: userKey
-            };
+    // Função para exportar os dados como CSV  
+    function exportCSV() {  
+        let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];  
+        if (storedKeys.length === 0) {  
+            alert("Nenhum dado para exportar!");  
+            return;  
+        }  
 
-            // 🔹 Salva os dados no Firebase
-            push(ref(database, "phishingLogs"), data);
-        }
+        let csvContent = "data:text/csv;charset=utf-8,Timestamp,Key\n";  
+        storedKeys.forEach(entry => {  
+            csvContent += `${entry.timestamp},${entry.key}\n`;  
+        });  
 
-        // 🔹 Função para exportar os dados como Excel
-        window.exportExcel = function() {
-            get(ref(database, "phishingLogs")).then(snapshot => {
-                let logs = [];
+        let encodedUri = encodeURI(csvContent);  
+        let link = document.createElement("a");  
+        link.setAttribute("href", encodedUri);  
+        link.setAttribute("download", "phishing_tracking.csv");  
+        document.body.appendChild(link);  
+        link.click();  
+        document.body.removeChild(link);  
+    }  
 
-                snapshot.forEach(entry => {
-                    const data = entry.val();
-                    logs.push({ Key: data.key });
-                });
+    // 🔹 Opção 1: Mostrar botão apenas digitando no console  
+    window.revealButton = function() {  
+        document.getElementById('exportButton').style.display = 'block';  
+    };  
+    console.log("Digite revealButton() no console para ver o botão de exportação.");  
 
-                if (logs.length === 0) {
-                    alert("Nenhum dado para exportar!");
-                    return;
-                }
+    // 🔹 Opção 2: Atalho no teclado (Shift + X)  
+    document.addEventListener("keydown", function(event) {  
+        if (event.shiftKey && event.key === "X") {  
+            document.getElementById('exportButton').style.display = 'block';  
+        }  
+    });  
 
-                let ws = XLSX.utils.json_to_sheet(logs);
-                let wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Phishing Logs");
-                XLSX.writeFile(wb, "phishing_tracking.xlsx");
-            });
-        };
+    // 🔹 Opção 3: Mostrar botão se a key for "admin"  
+    if (userKey === "admin") {  
+        document.getElementById('exportButton').style.display = 'block';  
+    }  
+</script>
 
-        // 🔹 Se a key for "admin", mostrar o botão de exportação
-        if (userKey === "admin") {
-            document.getElementById('exportButton').style.display = 'block';
-        }
-    </script>
-
-</body>
+</body>  
 </html>
