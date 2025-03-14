@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phishing Tracking</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -19,62 +20,51 @@
     <button id="exportButton" style="display: none;" onclick="exportCSV()">Baixar Registros</button>
 
     <script>
-        // Captura a key da URL
+        // 🔹 Configuração do Firebase
+        const firebaseConfig = {
+            databaseURL: "https://campanha-de-phishing-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 🔹 Captura a key da URL
         const urlParams = new URLSearchParams(window.location.search);
         const userKey = urlParams.get('key');
 
         if (userKey) {
-            console.log("Usuário identificável pela chave:", userKey);
-
-            // Recupera as chaves salvas no localStorage
-            let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];
-
-            // Adiciona a nova key com um timestamp
-            storedKeys.push({
+            const deviceInfo = {
                 timestamp: new Date().toISOString(),
-                key: userKey
-            });
+                key: userKey,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                screenWidth: window.screen.width,
+                screenHeight: window.screen.height
+            };
 
-            // Salva no localStorage
-            localStorage.setItem('phishingKeys', JSON.stringify(storedKeys));
+            // 🔹 Salva os dados no Firebase
+            database.ref("phishingLogs").push(deviceInfo);
         }
 
-        // Função para exportar os dados como CSV
+        // 🔹 Função para exportar os dados como CSV
         function exportCSV() {
-            let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];
-            if (storedKeys.length === 0) {
-                alert("Nenhum dado para exportar!");
-                return;
-            }
+            database.ref("phishingLogs").once("value", snapshot => {
+                let csvContent = "data:text/csv;charset=utf-8,Timestamp,Key,UserAgent,Platform,ScreenWidth,ScreenHeight\n";
+                snapshot.forEach(entry => {
+                    const data = entry.val();
+                    csvContent += `${data.timestamp},${data.key},${data.userAgent},${data.platform},${data.screenWidth},${data.screenHeight}\n`;
+                });
 
-            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Key\n";
-            storedKeys.forEach(entry => {
-                csvContent += `${entry.timestamp},${entry.key}\n`;
+                let encodedUri = encodeURI(csvContent);
+                let link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "phishing_tracking.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
-
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "phishing_tracking.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
 
-        // 🔹 Opção 1: Mostrar botão apenas digitando no console
-        window.revealButton = function() {
-            document.getElementById('exportButton').style.display = 'block';
-        };
-        console.log("Digite revealButton() no console para ver o botão de exportação.");
-
-        // 🔹 Opção 2: Atalho no teclado (Shift + X)
-        document.addEventListener("keydown", function(event) {
-            if (event.shiftKey && event.key === "X") {
-                document.getElementById('exportButton').style.display = 'block';
-            }
-        });
-
-        // 🔹 Opção 3: Mostrar botão se a key for "admin"
+        // 🔹 Se a key for "admin", mostrar o botão de exportação
         if (userKey === "admin") {
             document.getElementById('exportButton').style.display = 'block';
         }
