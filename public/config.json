@@ -1,0 +1,13 @@
+{
+    "firebaseConfig": {
+      "apiKey": "SUA_CHAVE_SECRETA",
+      "authDomain": "campanha-de-phishing.firebaseapp.com",
+      "databaseURL": "https://campanha-de-phishing-default-rtdb.firebaseio.com",
+      "projectId": "campanha-de-phishing",
+      "storageBucket": "campanha-de-phishing.appspot.com",
+      "messagingSenderId": "797706715694",
+      "appId": "1:797706715694:web:df92824abe0e78bec715bf",
+      "measurementId": "G-FWQ3NR16VT"
+    }
+  }
+  
