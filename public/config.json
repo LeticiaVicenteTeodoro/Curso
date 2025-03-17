@@ -1,6 +1,6 @@
 {
     "firebaseConfig": {
-      "apiKey": "SUA_CHAVE_SECRETA",
+      "apiKey": "AIzaSyBK-4XZ3Vnuhm_jWujHDFm0Lvr5lh1LrhM",
       "authDomain": "campanha-de-phishing.firebaseapp.com",
       "databaseURL": "https://campanha-de-phishing-default-rtdb.firebaseio.com",
       "projectId": "campanha-de-phishing",
