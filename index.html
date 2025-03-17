@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,49 +7,42 @@
     
     <link rel="stylesheet" href="style.css">  
     <script type="module">
-        // Importa o Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        fetch('/config.json')
+            .then(response => response.json())
+            .then(config => {
+                // Importa o Firebase SDK
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+                import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: localStorage.getItem('FIREBASE_API_KEY'),
-            authDomain: "campanha-de-phishing.firebaseapp.com",
-            databaseURL: "https://campanha-de-phishing-default-rtdb.firebaseio.com",
-            projectId: "campanha-de-phishing",
-            storageBucket: "campanha-de-phishing.appspot.com",
-            messagingSenderId: "797706715694",
-            appId: "1:797706715694:web:df92824abe0e78bec715bf",
-            measurementId: "G-FWQ3NR16VT"
-        };
+                // Inicializa o Firebase com os dados do config.json
+                const app = initializeApp(config.firebaseConfig);
+                const db = getFirestore(app);
 
-        // Inicializa o Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+                // Captura a key da URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const userKey = urlParams.get('key');
 
-        // Captura a key da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userKey = urlParams.get('key');
+                if (userKey) {
+                    console.log("Usuário identificável pela chave:", userKey);
 
-        if (userKey) {
-            console.log("Usuário identificável pela chave:", userKey);
-
-            // Salva no Firestore
-            async function salvarNoFirestore() {
-                try {
-                    await addDoc(collection(db, "phishingLogs"), {
-                        timestamp: new Date().toISOString(),
-                        key: userKey,
-                        userAgent: navigator.userAgent, // Coleta informações do dispositivo
-                        ip: "Desconhecido" // IP precisa ser coletado do backend
-                    });
-                    console.log("Dados armazenados com sucesso!");
-                } catch (error) {
-                    console.error("Erro ao salvar dados:", error);
+                    // Salva no Firestore
+                    async function salvarNoFirestore() {
+                        try {
+                            await addDoc(collection(db, "phishingLogs"), {
+                                timestamp: new Date().toISOString(),
+                                key: userKey,
+                                userAgent: navigator.userAgent, // Coleta informações do dispositivo
+                                ip: "Desconhecido" // IP precisa ser coletado do backend
+                            });
+                            console.log("Dados armazenados com sucesso!");
+                        } catch (error) {
+                            console.error("Erro ao salvar dados:", error);
+                        }
+                    }
+                    salvarNoFirestore();
                 }
-            }
-            salvarNoFirestore();
-        }
+            })
+            .catch(error => console.error("Erro ao carregar o config.json", error));
     </script>
 </head>
 <body>
