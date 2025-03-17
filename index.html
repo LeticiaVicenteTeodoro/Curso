@@ -1,81 +1,65 @@
-<html lang="pt-br">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Phishing Tracking</title>  
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Tracking</title>
+    
     <link rel="stylesheet" href="style.css">  
-</head>  
-<body>  <div class="container">  
-    <div class="message-box">  
-        <h1>Você caiu em um ataque de phishing!</h1>  
-        <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>  
-        <button onclick="window.location.href='slide1.html'">Começar o Curso</button>  
-    </div>  
-</div>  
+    <script type="module">
+        // Importa o Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-<button id="exportButton" style="display: none;" onclick="exportCSV()">Baixar Registros</button>  
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBK-4XZ3Vnuhm_jWujHDFm0Lvr5lh1LrhM",
+            authDomain: "campanha-de-phishing.firebaseapp.com",
+            databaseURL: "https://campanha-de-phishing-default-rtdb.firebaseio.com",
+            projectId: "campanha-de-phishing",
+            storageBucket: "campanha-de-phishing.appspot.com",
+            messagingSenderId: "797706715694",
+            appId: "1:797706715694:web:df92824abe0e78bec715bf",
+            measurementId: "G-FWQ3NR16VT"
+        };
 
-<script>  
-    // Captura a key da URL  
-    const urlParams = new URLSearchParams(window.location.search);  
-    const userKey = urlParams.get('key');  
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    if (userKey) {  
-        console.log("Usuário identificável pela chave:", userKey);  
+        // Captura a key da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userKey = urlParams.get('key');
 
-        // Recupera as chaves salvas no localStorage  
-        let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];  
+        if (userKey) {
+            console.log("Usuário identificável pela chave:", userKey);
 
-        // Adiciona a nova key com um timestamp  
-        storedKeys.push({  
-            timestamp: new Date().toISOString(),  
-            key: userKey  
-        });  
-
-        // Salva no localStorage  
-        localStorage.setItem('phishingKeys', JSON.stringify(storedKeys));  
-    }  
-
-    // Função para exportar os dados como CSV  
-    function exportCSV() {  
-        let storedKeys = JSON.parse(localStorage.getItem('phishingKeys')) || [];  
-        if (storedKeys.length === 0) {  
-            alert("Nenhum dado para exportar!");  
-            return;  
-        }  
-
-        let csvContent = "data:text/csv;charset=utf-8,Timestamp,Key\n";  
-        storedKeys.forEach(entry => {  
-            csvContent += `${entry.timestamp},${entry.key}\n`;  
-        });  
-
-        let encodedUri = encodeURI(csvContent);  
-        let link = document.createElement("a");  
-        link.setAttribute("href", encodedUri);  
-        link.setAttribute("download", "phishing_tracking.csv");  
-        document.body.appendChild(link);  
-        link.click();  
-        document.body.removeChild(link);  
-    }  
-
-    // 🔹 Opção 1: Mostrar botão apenas digitando no console  
-    window.revealButton = function() {  
-        document.getElementById('exportButton').style.display = 'block';  
-    };  
-    console.log("Digite revealButton() no console para ver o botão de exportação.");  
-
-    // 🔹 Opção 2: Atalho no teclado (Shift + X)  
-    document.addEventListener("keydown", function(event) {  
-        if (event.shiftKey && event.key === "X") {  
-            document.getElementById('exportButton').style.display = 'block';  
-        }  
-    });  
-
-    // 🔹 Opção 3: Mostrar botão se a key for "admin"  
-    if (userKey === "admin") {  
-        document.getElementById('exportButton').style.display = 'block';  
-    }  
-</script>
-
-</body>  
+            // Salva no Firestore
+            async function salvarNoFirestore() {
+                try {
+                    await addDoc(collection(db, "phishingLogs"), {
+                        timestamp: new Date().toISOString(),
+                        key: userKey,
+                        userAgent: navigator.userAgent, // Coleta informações do dispositivo
+                        ip: "Desconhecido" // IP precisa ser coletado do backend
+                    });
+                    console.log("Dados armazenados com sucesso!");
+                } catch (error) {
+                    console.error("Erro ao salvar dados:", error);
+                }
+            }
+            salvarNoFirestore();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="message-box">
+            <h1>Você caiu em um ataque de phishing!</h1>
+            <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
+            <button onclick="window.location.href='slide1.html'">Começar o Curso</button>
+        </div>
+    </div>
+</body>
 </html>
