@@ -4,46 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phishing Tracking</title>
-    
-    <link rel="stylesheet" href="style.css">  
-    <script type="module">
-        fetch('/config.json')
-            .then(response => response.json())
-            .then(config => {
-                // Importa o Firebase SDK
-                import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-                import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
-                // Inicializa o Firebase com os dados do config.json
-                const app = initializeApp(config.firebaseConfig);
-                const db = getFirestore(app);
-
-                // Captura a key da URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const userKey = urlParams.get('key');
-
-                if (userKey) {
-                    console.log("Usuário identificável pela chave:", userKey);
-
-                    // Salva no Firestore
-                    async function salvarNoFirestore() {
-                        try {
-                            await addDoc(collection(db, "phishingLogs"), {
-                                timestamp: new Date().toISOString(),
-                                key: userKey,
-                                userAgent: navigator.userAgent, // Coleta informações do dispositivo
-                                ip: "Desconhecido" // IP precisa ser coletado do backend
-                            });
-                            console.log("Dados armazenados com sucesso!");
-                        } catch (error) {
-                            console.error("Erro ao salvar dados:", error);
-                        }
-                    }
-                    salvarNoFirestore();
-                }
-            })
-            .catch(error => console.error("Erro ao carregar o config.json", error));
-    </script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -53,5 +14,34 @@
             <button onclick="window.location.href='slide1.html'">Começar o Curso</button>
         </div>
     </div>
+
+    <script>
+        // Captura a key da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userKey = urlParams.get('key');
+
+        if (userKey) {
+            console.log("Usuário identificado pela chave:", userKey);
+
+            // Cria o objeto de dados
+            const data = {
+                timestamp: new Date().toISOString(),
+                key: userKey
+            };
+
+            // Envia os dados para o backend via requisição HTTP
+            fetch('http://localhost:3000/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => console.log('Dados enviados:', result))
+            .catch(error => console.error('Erro ao enviar dados:', error));
+        }
+    </script>
+
 </body>
 </html>
