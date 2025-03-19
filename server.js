@@ -1,79 +1,51 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const passwordField = document.getElementById("password");
-    const lengthSlider = document.getElementById("length");
-    const lengthValue = document.getElementById("lengthValue");
-    const uppercaseCheckbox = document.getElementById("uppercase");
-    const lowercaseCheckbox = document.getElementById("lowercase");
-    const numbersCheckbox = document.getElementById("numbers");
-    const symbolsCheckbox = document.getElementById("symbols");
-    const generateBtn = document.getElementById("generateBtn");
-    const memorizableBtn = document.getElementById("memorizableBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const strengthBar = document.getElementById("strengthBar");
-    const strengthText = document.getElementById("strengthText");
-    const suggestions = document.getElementById("suggestions");
-    const toggleThemeBtn = document.getElementById("toggleTheme");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { Pool } = require('pg');
 
-    lengthSlider.addEventListener("input", function() {
-        lengthValue.textContent = lengthSlider.value;
-    });
+const app = express();
+const port = process.env.PORT || 3000;
 
-    function generatePassword() {
-        const length = parseInt(lengthSlider.value);
-        const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const lowercase = "abcdefghijklmnopqrstuvwxyz";
-        const numbers = "0123456789";
-        const symbols = "!@#$%^&*()_-+=<>?";
+app.use(cors());
+app.use(bodyParser.json());
 
-        let characters = "";
-        if (uppercaseCheckbox.checked) characters += uppercase;
-        if (lowercaseCheckbox.checked) characters += lowercase;
-        if (numbersCheckbox.checked) characters += numbers;
-        if (symbolsCheckbox.checked) characters += symbols;
+// Configuração da conexão com o banco de dados PostgreSQL
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+});
 
-        if (characters.length === 0) return "";
+// Criar tabela caso não exista
+pool.query(`
+    CREATE TABLE IF NOT EXISTS phishing_tracking (
+        id SERIAL PRIMARY KEY,
+        timestamp TIMESTAMP NOT NULL,
+        key TEXT NOT NULL
+    );
+`);
 
-        let password = "";
-        for (let i = 0; i < length; i++) {
-            password += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
+// Rota para receber os dados do clique
+app.post('/track', async (req, res) => {
+    const { timestamp, key } = req.body;
 
-        passwordField.value = password;
-        evaluateStrength(password);
+    if (!timestamp || !key) {
+        return res.status(400).json({ error: 'Dados inválidos' });
     }
 
-    function evaluateStrength(password) {
-        let strength = 0;
-        if (password.length >= 12) strength += 2;
-        if (/[A-Z]/.test(password)) strength += 1;
-        if (/[a-z]/.test(password)) strength += 1;
-        if (/[0-9]/.test(password)) strength += 1;
-        if (/[^a-zA-Z0-9]/.test(password)) strength += 2;
-
-        let colors = ["#ff4d4d", "#ffcc00", "#00cc66"];
-        let levels = ["Fraca", "Média", "Forte"];
-        let index = Math.min(strength, 2);
-
-        strengthBar.style.background = colors[index];
-        strengthText.textContent = "Força: " + levels[index];
+    try {
+        await pool.query('INSERT INTO phishing_tracking (timestamp, key) VALUES ($1, $2)', [timestamp, key]);
+        res.status(201).json({ message: 'Dados registrados com sucesso' });
+    } catch (err) {
+        console.error('Erro ao inserir no banco:', err);
+        res.status(500).json({ error: 'Erro no servidor' });
     }
+});
 
-    function generateMemorizablePassword() {
-        const words = ["Azul", "Sol", "Gato", "Forte", "Rio", "Piano"];
-        const password = words[Math.floor(Math.random() * words.length)] + 
-                         "-" + Math.floor(Math.random() * 99) + "!";
-        passwordField.value = password;
-    }
-
-    generateBtn.addEventListener("click", generatePassword);
-    memorizableBtn.addEventListener("click", generateMemorizablePassword);
-    
-    copyBtn.addEventListener("click", () => {
-        navigator.clipboard.writeText(passwordField.value);
-        alert("Senha copiada!");
-    });
-
-    toggleThemeBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-    });
+// Iniciar o servidor
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });
