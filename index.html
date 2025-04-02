@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -16,32 +16,27 @@
     </div>
 
     <script>
-        // Captura a key da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userKey = urlParams.get('key');
+        document.addEventListener("DOMContentLoaded", function () {
+            // Captura a key da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const userKey = urlParams.get('key');
 
-        if (userKey) {
-            console.log("Usuário identificado pela chave:", userKey);
+            if (userKey) {
+                console.log("Usuário identificado pela chave:", userKey);
 
-            // Cria o objeto de dados
-            const data = {
-                timestamp: new Date().toISOString(),
-                key: userKey
-            };
-
-            // Envia os dados para o backend via requisição HTTP
-            fetch('http://localhost:3000/track', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => console.log('Dados enviados:', result))
-            .catch(error => console.error('Erro ao enviar dados:', error));
-        }
+                // Envia os dados para o backend
+                fetch('http://127.0.0.1:5000/registra_clique', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ key: userKey })
+                })
+                .then(response => response.json())
+                .then(result => console.log('Dados enviados com sucesso:', result))
+                .catch(error => console.error('Erro ao enviar dados:', error));
+            }
+        });
     </script>
-
 </body>
 </html>
