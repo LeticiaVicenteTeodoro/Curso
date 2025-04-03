@@ -4,19 +4,19 @@ import psycopg2
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # Habilita CORS para todas as rotas
+CORS(app)
 
-# Configurações do banco
-DB_CONFIG = {
-    "dbname": "campanhaPhishing",
-    "user": "postgres",
-    "password": "123",
-    "host": "localhost",
-    "port": "5432"
-}
+# Configuração do banco de dados no Render
+DB_URL = "postgresql://postgres1:JvMXTa38azfA1f8Du8To2n7TR7VToKA0@dpg-cvmt4sc9c44c73bkq1ug-a.oregon-postgres.render.com/campanha_phishing"
 
 def conectar_db():
-    return psycopg2.connect(**DB_CONFIG)
+    """Cria uma conexão segura com o banco de dados"""
+    try:
+        conn = psycopg2.connect(DB_URL, sslmode="require")
+        return conn
+    except Exception as e:
+        print(f"Erro na conexão com o banco: {e}")
+        return None  # Retorna None se a conexão falhar
 
 @app.route("/registra_clique", methods=["POST"])
 def registra_clique():
@@ -26,11 +26,13 @@ def registra_clique():
     if not hash_key:
         return jsonify({"erro": "Key não fornecida"}), 400
 
+    conn = conectar_db()
+    if not conn:
+        return jsonify({"erro": "Erro ao conectar ao banco de dados"}), 500
+
     try:
-        conn = conectar_db()
         cur = conn.cursor()
 
-        # Atualiza apenas se o data_clique ainda for NULL (primeiro clique)
         cur.execute("""
             UPDATE cliques_email 
             SET data_clique = %s 
@@ -49,7 +51,8 @@ def registra_clique():
             return jsonify({"erro": "Hash não encontrado ou clique já registrado"}), 400
 
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+        print(f"Erro ao registrar clique: {e}")
+        return jsonify({"erro": "Erro interno no servidor"}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Debug ativado para mais detalhes
