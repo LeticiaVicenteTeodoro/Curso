@@ -187,15 +187,17 @@
         if (currentQuestionIndex < questions.length) {
           loadQuestion();
         } else {
-          fetch(
-            "https://script.google.com/macros/s/AKfycbw3ZTxXEbxzJ8Oy26gTCogKuGya4M24Ra_t_M6nZfrSd5o8m1Aw7L4uKRJNjOoafWxR/exec",
+         fetch(
+            "https://script.google.com/macros/s/AKfycbyiZlFiz6mMJr_ckxMYI_uUMwiIP_NceZrvf9MLX1YedtdedfT6_iCUNWdFv-48pV6TsQ/exec",
             {
               method: "POST",
-              body: JSON.stringify({ clique: true }),
             }
-          ).finally(() => {
-            window.location.href = "Paginadeconclusaodocurso.html";
-          });
+          )
+            .then((response) => response.text())
+            .then((data) => console.log(data))
+            .finally(() => {
+              window.location.href = "Paginadeconclusaodocurso.html";
+            });
         }
       }
 
