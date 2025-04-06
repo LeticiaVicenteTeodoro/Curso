@@ -11,22 +11,24 @@
         <div class="message-box">
             <h1>Você caiu em um ataque de phishing!</h1>
             <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
-           <button id="start-course-btn">!!Começar o Curso</button>
+           <button id="start-course-btn">Começar o Curso!!</button>
         </div>
     </div>
 
     <script>
         //conta os cliques do inicio e redireciona pro slide1
-         document.addEventListener("DOMContentLoaded", function () {
+           document.addEventListener("DOMContentLoaded", function () {
             const btn = document.getElementById("start-course-btn");
 
             btn.addEventListener("click", function () {
-                fetch('https://script.google.com/macros/s/AKfycbxa7QVek2efTXYKV1t1ruFQfMafdLQEzMvtvU6t9GyktBnp_qacPbIXjYffmoerqEsSKw/exec', {
+                fetch(' https://script.google.com/macros/s/AKfycbx3J2z5LFnWWGQGy8TdZXQH9ZZe4AnFxaM4d6poFP1WKaDyRkuDz2Zmrr_WRfjk_5bNHw/exec', {
                     method: 'POST',
-                }).finally(() => {
-                    // Redireciona pro curso
-                    window.location.href = 'slide1.html';
-                });
+                })
+                    .then(response => response.text())
+                    .then(data => console.log(data))
+                    .finally(() => {
+                        window.location.href = 'slide1.html';
+                    });
             });
         });
 
