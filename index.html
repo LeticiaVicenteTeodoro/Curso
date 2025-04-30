@@ -1,58 +1,108 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phishing Tracking</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phishing Tracking</title>
+  <style>
+    body {
+      background: black;
+      color: red;
+      font-family: 'Courier New', Courier, monospace;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: flickerBg 0.1s infinite;
+    }
+
+    .message-box {
+      text-align: center;
+      animation: glitch 1s infinite;
+    }
+
+    h1, p {
+      font-size: 2em;
+      text-shadow: 0 0 5px red, 0 0 10px darkred;
+      margin-bottom: 20px;
+    }
+
+    #start-course-btn {
+      background: red;
+      color: black;
+      font-weight: bold;
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border: none;
+      cursor: pointer;
+      animation: flickerText 0.15s infinite;
+      box-shadow: 0 0 10px red;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    @keyframes flickerBg {
+      0%, 100% { background-color: black; }
+      50% { background-color: #1a0000; }
+    }
+
+    @keyframes flickerText {
+      0%, 100% { color: red; }
+      50% { color: darkred; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message-box">
-            <h1>Você caiu em um ataque de phishing!</h1>
-            <p>Por favor, inicie o curso de conscientização para aprender como evitar este tipo de ataque no futuro.</p>
-           <button id="start-course-btn">Começar o Curso!!</button>
-        </div>
+  <div class="container">
+    <div class="message-box">
+      <h1>ESSA É UMA CAMPANHA DE PHISHING!</h1>
+      <p>Inicie o curso de conscientização AGORA para não ser enganado novamente e cair em golpes que tragam danos financeiros ou roubem seus dados.</p>
+      <button id="start-course-btn">COMEÇAR O CURSO!!</button>
     </div>
+  </div>
 
-    <script>
-        //conta os cliques do inicio e redireciona pro slide1
-           document.addEventListener("DOMContentLoaded", function () {
-            const btn = document.getElementById("start-course-btn");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("start-course-btn");
 
-            btn.addEventListener("click", function () {
-                fetch(' https://script.google.com/macros/s/AKfycbx3J2z5LFnWWGQGy8TdZXQH9ZZe4AnFxaM4d6poFP1WKaDyRkuDz2Zmrr_WRfjk_5bNHw/exec', {
-                    method: 'POST',
-                })
-                    .then(response => response.text())
-                    .then(data => console.log(data))
-                    .finally(() => {
-                        window.location.href = 'slide1.html';
-                    });
-            });
-        });
+      btn.addEventListener("click", function () {
+        fetch('https://script.google.com/macros/s/AKfycbx3J2z5LFnWWGQGy8TdZXQH9ZZe4AnFxaM4d6poFP1WKaDyRkuDz2Zmrr_WRfjk_5bNHw/exec', {
+          method: 'POST',
+        })
+          .then(response => response.text())
+          .then(data => console.log(data))
+          .finally(() => {
+            window.location.href = 'slide1.html';
+          });
+      });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // Captura a key da URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const userKey = urlParams.get('key');
+      const urlParams = new URLSearchParams(window.location.search);
+      const userKey = urlParams.get('key');
 
-            if (userKey) {
-                console.log("Usuário identificado pela chave:", userKey);
+      if (userKey) {
+        console.log("Usuário identificado pela chave:", userKey);
 
-                // Envia os dados para o backend
-                fetch('https://cursophishing.onrender.com/registra_clique', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ key: userKey })
-                })
-                .then(response => response.json())
-                .then(result => console.log('Dados enviados com sucesso:', result))
-                .catch(error => console.error('Erro ao enviar dados:', error));
-            }
-        });
-    </script>
+        fetch('https://cursophishing.onrender.com/registra_clique', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ key: userKey })
+        })
+        .then(response => response.json())
+        .then(result => console.log('Dados enviados com sucesso:', result))
+        .catch(error => console.error('Erro ao enviar dados:', error));
+      }
+    });
+  </script>
 </body>
 </html>
