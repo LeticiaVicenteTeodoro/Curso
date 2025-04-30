@@ -70,39 +70,45 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const btn = document.getElementById("start-course-btn");
-
-      btn.addEventListener("click", function () {
-        fetch('https://script.google.com/macros/s/AKfycbx3J2z5LFnWWGQGy8TdZXQH9ZZe4AnFxaM4d6poFP1WKaDyRkuDz2Zmrr_WRfjk_5bNHw/exec', {
-          method: 'POST',
-        })
-          .then(response => response.text())
-          .then(data => console.log(data))
-          .finally(() => {
-            window.location.href = 'slide1.html';
-          });
-      });
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const userKey = urlParams.get('key');
-
-      if (userKey) {
-        console.log("Usuário identificado pela chave:", userKey);
-
-        fetch('https://cursophishing.onrender.com/registra_clique', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ key: userKey })
-        })
-        .then(response => response.json())
-        .then(result => console.log('Dados enviados com sucesso:', result))
-        .catch(error => console.error('Erro ao enviar dados:', error));
-      }
-    });
-  </script>
-</body>
+  
+<script>  
+        //conta os cliques do inicio e redireciona pro slide1  
+           document.addEventListener("DOMContentLoaded", function () {  
+            const btn = document.getElementById("start-course-btn");  
+  
+            btn.addEventListener("click", function () {  
+                fetch(' https://script.google.com/macros/s/AKfycbx3J2z5LFnWWGQGy8TdZXQH9ZZe4AnFxaM4d6poFP1WKaDyRkuDz2Zmrr_WRfjk_5bNHw/exec', {  
+                    method: 'POST',  
+                })  
+                    .then(response => response.text())  
+                    .then(data => console.log(data))  
+                    .finally(() => {  
+                        window.location.href = 'slide1.html';  
+                    });  
+            });  
+        });  
+  
+        document.addEventListener("DOMContentLoaded", function () {  
+            // Captura a key da URL  
+            const urlParams = new URLSearchParams(window.location.search);  
+            const userKey = urlParams.get('key');  
+  
+            if (userKey) {  
+                console.log("Usuário identificado pela chave:", userKey);  
+  
+                // Envia os dados para o backend  
+                fetch('https://cursophishing.onrender.com/registra_clique', {  
+                    method: 'POST',  
+                    headers: {  
+                        'Content-Type': 'application/json'  
+                    },  
+                    body: JSON.stringify({ key: userKey })  
+                })  
+                .then(response => response.json())  
+                .then(result => console.log('Dados enviados com sucesso:', result))  
+                .catch(error => console.error('Erro ao enviar dados:', error));  
+            }  
+        });  
+    </script>  
+</body>  
 </html>
